@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}FPL - League Updates{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2">
+    <h2>2020/21 Season Updates</h2>
+    {% for post in posts %}
+        <p class="col-lg-5 col-sm-12">
+        <h3>{{ post[1] | safe }}</h3>
+        {{ post[2] | safe }}</p>
+    {% endfor %}
+
+    <img src="https://notrophy.s3.us-east-2.amazonaws.com/trophy.jpeg" class="rounded mx-auto d-block"
+        style="max-width: 300px" alt="...">
+    <br><br>
+    <div class="col text-center">
+        <a href="https://fantasy.premierleague.com/leagues/25895/standings/c" class="btn btn-outline-dark btn-lg mx-1"
+            role="button" aria-disabled="true">Our FPL Page</a>
+        <a href="https://join.slack.com/t/noteveryonege-n9y8783/shared_invite/zt-ggwes1ky-yB8Ft3zo2mEG39xxD~65kw"
+            class="btn btn-outline-dark btn-lg mx-1" role="button" aria-disabled="true">Join the Slack</a>
+        <br><br>
+    </div>
+
+</div>
+
+{% endblock %}
