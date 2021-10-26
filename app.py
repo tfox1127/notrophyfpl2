@@ -8,7 +8,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 app = Flask(__name__)
 
 #DATABASE_URL
-DATABASE_URL = os.environ['DATABASE_URL']
+#DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ['HEROKU_POSTGRESQL_CHARCOAL_URL']
 
 engine = create_engine(DATABASE_URL, isolation_level="AUTOCOMMIT")
 db = scoped_session(sessionmaker(bind=engine))
