@@ -9,7 +9,10 @@ app = Flask(__name__)
 
 #DATABASE_URL
 #DATABASE_URL = os.environ['DATABASE_URL']
-DATABASE_URL = os.environ['HEROKU_POSTGRESQL_CHARCOAL_URL']
+try: 
+    DATABASE_URL = os.environ['HEROKU_POSTGRESQL_CHARCOAL_URL']
+except: 
+    DATABASE_URL = os.environ['HEROKU_POSTGRESQL_GAS_URL']
 
 engine = create_engine(DATABASE_URL, isolation_level="AUTOCOMMIT")
 db = scoped_session(sessionmaker(bind=engine))
