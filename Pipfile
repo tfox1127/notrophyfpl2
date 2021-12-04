@@ -1,17 +1,19 @@
 [[source]]
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
-
-[packages]
-gunicorn = "*"
-flask = "*"
-psycopg2 = "*"
-psycopg2-binary = "*"
-sqlalchemy = "*"
-flask-sqlalchemy = "*"
 
 [dev-packages]
 
+[packages]
+flask = "*"
+psycopg2 = "==2.8.6"
+psycopg2-binary = "==2.8.6"
+flask-sqlalchemy = "*"
+gunicorn = "*"
+sqlalchemy = "==1.4.15" 
+pandas = "*"
+requests= "*"
+
 [requires]
-python_version = "3.8"
+python_version = "3.8.10"
