@@ -24,7 +24,16 @@ def index():
 @app.route('/fpl_live')
 def fpl_live():
 
-    return render_template('fpl_live.html')
+    q="""
+        SELECT entry, player_name, entry_name, sum(multiplier * points) as score, sum((multiplier * points) + GREATEST(cast(t_bonus as INT), 0) - bonus) as score_2
+        FROM test_do_subs_eow
+        GROUP BY entry, player_name, entry_name
+        """
+
+    live_table = db.execute(q)
+    db.commit()
+
+    return render_template('fpl_live.html', live_table=live_table)
 
 
 @app.route('/run_search', methods= ['POST'])
@@ -32,9 +41,14 @@ def run_search():
     if request.method == 'POST':
         search_for = request.form['search_for']
         search_for_like = "%" + search_for + "%"
-        elements = db.execute("SELECT * FROM ftbl_elli2 WHERE UPPER(ftbl_elli2.\"web_name\") LIKE UPPER(:search_for_like) OR UPPER(\"ftbl_elli2\".\"team_name\") LIKE UPPER(:search_for_like)", {"search_for_like":search_for_like})
+        #elements = db.execute("SELECT * FROM api_elements WHERE UPPER(api_elements.\"web_name\") LIKE UPPER(:search_for_like) OR UPPER(\"api_elements\".\"second_name\") LIKE UPPER(:search_for_like)", {"search_for_like":search_for_like})
+        #elements = db.execute(""" SELECT * FROM api_elements WHERE UPPER(api_elements.web_name) LIKE UPPER(:search_for_like) """ , {"search_for_like":search_for_like})
+        elements = db.execute(""" 
+        SELECT * FROM "api_elements" WHERE UPPER("web_name") LIKE UPPER('%var%')
+        """) 
+
         db.commit()
-        return render_template('search_results.html', elements=elements, search_for=search_for)
+        return render_template('fpl_search_results.html', elements=elements, search_for=search_for)
 
 if __name__ == '__main__':
     app.run()
