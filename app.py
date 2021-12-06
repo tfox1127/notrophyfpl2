@@ -7,7 +7,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__)
 
-#DATABASE_URL
 DATABASE_URL = os.environ['HEROKU_POSTGRESQL_GAS_URL']
 
 engine = create_engine(DATABASE_URL, isolation_level="AUTOCOMMIT")
@@ -24,9 +23,18 @@ def index():
 def fpl_live():
 
     q="""
-        SELECT entry, player_name, entry_name, sum(multiplier * points) as score, sum((multiplier * points) + GREATEST(cast(t_bonus as INT), 0) - bonus) as score_2
+        SELECT 'rank here', test_do_subs_eow.entry, player_name, sum((multiplier * points) + GREATEST(cast(t_bonus as INT), 0) - bonus) as score_2, 'total here', 'minutes here', 'salary here', 
+            cap.cap_player_id, cap.web_name as Captain, vc.vc_player_id, vc.web_name as Vice
         FROM test_do_subs_eow
-        GROUP BY entry, player_name, entry_name
+        LEFT JOIN 
+            (SELECT entry, event, element as cap_player_id, web_name FROM api_picks LEFT JOIN (SELECT id, web_name FROM api_elements) as elements ON element = id WHERE api_picks.is_captain) as cap 
+            ON test_do_subs_eow.entry = cap.entry
+
+        LEFT JOIN 
+            (SELECT entry, event, element as vc_player_id, web_name FROM api_picks LEFT JOIN (SELECT id, web_name FROM api_elements) as elements ON element = id WHERE api_picks.is_vice_captain) as vc
+            ON test_do_subs_eow.entry = vc.entry
+            
+        GROUP BY test_do_subs_eow.entry, player_name, entry_name, cap.web_name, vc.web_name, cap.cap_player_id, vc.vc_player_id
         """
 
     live_table = db.execute(q)

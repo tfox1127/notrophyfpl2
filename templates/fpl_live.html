@@ -13,20 +13,30 @@
             <div class="table-responsive text-nowrap">
                 <table class="table table-sm text-xsmall table-hover sortable;">
                     <thead class="thead-light text-center alight-middle">
-                        <td>entry</td>
-                        <td>player_name</td>
-                        <td>entry_name</td>
-                        <td>score</td>
-                        <td>score2</td>
+                        <td>Rank</td>
+                        <td>Team (Chip)</td>
+                        <td>
+                            <div data-toggle="tooltip" data-placement="top" title="This Week's Points">Pts (W)</div>
+                        </td>
+                        <td>
+                            <div data-toggle="tooltip" data-placement="top" title="Total Points">Pts (T)</div>
+                        </td>
+                        <td>MP</td>
+                        <td>SP</td>
+                        <td>Captian</td>
+                        <td>Vice</td>
                     </thead>
                     <tbody class="text-center align-middle">
                         {% for i in live_table %}
                         <tr>
                             <td>{{i[0]}}</td>
-                            <td>{{i[1]}}</td>
-                            <td>{{i[2]}}</td>
+                            <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td>
                             <td>{{i[3]}}</td>
                             <td>{{i[4]}}</td>
+                            <td>{{i[5]}}</td>
+                            <td>{{i[6]}}</td>
+                            <td><a href="player/{{i[7]}}" class="text-dark">{{i[8]}}</a></td>
+                            <td><a href="player/{{i[9]}}" class="text-dark">{{i[10]}}</a></td>
                         </tr>
                         {% endfor %}
 
@@ -35,48 +45,6 @@
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-sm-12">
-          <div class="table-responsive text-nowrap">
-            <table class="table table-sm text-xsmall table-hover sortable ;">
-              <thead class="thead-light text-center align-middle">
-                <td class="align-middle">Rk (Chg)</td>
-                <td class="align-middle">Team (Chip)</td>
-                <td class="align-middle">
-                  <div data-toggle="tooltip" data-placement="top" title="This Week's Points">Pts (W)</div>
-                </td>
-                <td class="align-middle">Pts (T)</td>
-                <td class="align-middle">GP</td>
-                <td class="align-middle">
-                  <div data-toggle="tooltip" data-placement="top" title="% of Salary Played">SP</div>
-                </td>
-                <td class="align-middle">Captain</td>
-                <td class="align-middle">Vice</td>
-              </thead>
-              <tbody class="text-center align-middle">
-                {% for element in elements %}
-                <tr>
-                  <td class="align-middle">{{element[14]}} ({{element[16]}})</td>
-                  <td class="align-middle"><a href="/teams30/{{element[1]}}" class="text-dark">{{element[2]}}</a></td>
-                  <td class="align-middle">{{element[3]}}</td>
-                  <td class="align-middle">{{element[12]}}</td>
-                  <td class="align-middle">{{element[4]}}/{{element[5]}}</td>
-                  <td class="align-middle">{{element[6]}}</td>
-                  <td class="align-middle"><a href="/player/{{element[7]}}" class="text-dark">{{element[8]}}
-                      ({{element[21]}})</a></td>
-                  <td class="align-middle"><a href="/player/{{element[9]}}" class="text-dark">{{element[10]}}
-                      ({{element[24]}})</a></td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
 </div>
 
 {% endblock %}
