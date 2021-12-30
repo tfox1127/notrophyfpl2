@@ -61,7 +61,7 @@ def fpl_live():
             player_name as Player, 
             CAST(score_3 AS int) as score_3, 
             CAST(calc_score_parts.total_points - calc_score_parts.event_transfers_cost + calc_score_parts.score_3 AS int) as Total,
-            played_games AS int, 
+            ROUND(CAST(played_games AS numeric), 1) as test, 
             'salary here' as Salary, 
             cap.cap_player_id, 
             cap.web_name as Captain, 
