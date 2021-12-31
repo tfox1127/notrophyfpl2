@@ -58,17 +58,21 @@ def fpl_live():
     q = """ 
         SELECT rank_live, 
             calc_score_parts.entry, 
-            player_name as Player, 
+            CASE name
+                WHEN 'NO_CHIP' THEN player_name
+                ELSE CONCAT(player_name, ' (', name, ')')
+                END AS player_name,
             CAST(score_3 AS int) as score_3, 
             CAST(calc_score_parts.total_points - calc_score_parts.event_transfers_cost + calc_score_parts.score_3 AS int) as Total,
             ROUND(CAST(played_games AS numeric), 1) as test, 
-            'salary here' as Salary, 
+            price_pct_str as Salary, 
             cap.cap_player_id, 
             cap.web_name as Captain, 
-            vc.vc_player_id, 
+            vc.vc_player_id,
             vc.web_name as Vice,
             change_str,
-            CAST(expected_games AS int)
+            CAST(expected_games AS int), 
+            salary_possible
         FROM calc_score_parts
         LEFT JOIN 
             (SELECT entry, player_name FROM api_standings) as names
@@ -94,16 +98,16 @@ def fpl_live():
 
     #ACTIVE GAMES 
     groups = db.execute(f"""SELECT 
-                        "Team 1 ID", "Team 1 Name", "score_1",
-                        "Team 2 ID", "Team 2 Name", "score_2",
+                        "Team 1 ID", "Team 1 Name", "score_1", "price_pct_str_1",
+                        "Team 2 ID", "Team 2 Name", "score_2", "price_pct_str_2",
                         "Group"
                         FROM 
         (SELECT "Group", "Team 1 ID", "Team 2 ID", "Team 1 Name", "Team 2 Name" FROM tbl_2122_groups WHERE "GW" = {CURRENT_WEEK}) as GROUPS
         LEFT JOIN 
-            (SELECT "entry" as entry_1, "score_3" as score_1 FROM "calc_score_parts") as SCOREBOARD_1
+            (SELECT "entry" as entry_1, "score_3" as score_1, "price_pct_str" as "price_pct_str_1" FROM "calc_score_parts") as SCOREBOARD_1
                 ON GROUPS."Team 1 ID" = SCOREBOARD_1.entry_1
         LEFT JOIN 
-            (SELECT "entry" as entry_2, "score_3" as score_2 FROM "calc_score_parts") as SCOREBOARD_2
+            (SELECT "entry" as entry_2, "score_3" as score_2, "price_pct_str" as "price_pct_str_2" FROM "calc_score_parts") as SCOREBOARD_2
                 ON GROUPS."Team 2 ID" = SCOREBOARD_2.entry_2
         ORDER BY "Group"
         """)
