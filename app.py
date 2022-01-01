@@ -72,7 +72,7 @@ def fpl_live():
             vc.web_name as Vice,
             change_str,
             CAST(expected_games AS int), 
-            salary_possible
+            ROUND(CAST(salary_possible AS numeric), 1) as salary_possible
         FROM calc_score_parts
         LEFT JOIN 
             (SELECT entry, player_name FROM api_standings) as names
