@@ -112,7 +112,46 @@ def fpl_live():
         ORDER BY "Group"
         """)
 
+    db.commit()
+
     return render_template('fpl_live.html', live_table=live_table, groups=groups)
+
+@app.route('/team/<int:fpl_team_id>')
+def fpl_team(fpl_team_id):
+    q = f""" SELECT * FROM 
+        (SELECT 
+            "element", "position", "multiplier", "is_captain", "is_vice_captain", "web_name", "team", "plural_name_short", 
+            "fixture", "bps", "t_bonus", "minutes", "goals_scored", "assists", "clean_sheets", "goals_conceded", "own_goals", 
+            "penalties_saved", "penalties_missed", "yellow_cards", "red_cards", "saves", "bonus", "team_a", "team_h", 
+            "fix_minutes", "status_game", "status_player", "position_name", "score_3", "points"
+        FROM scores_player_lvl
+        WHERE entry = {fpl_team_id}) as scores_player_lvl
+        LEFT JOIN (
+            SELECT 
+                "id", ROUND(CAST(now_cost AS numeric) / 10, 1) as cost, "points_per_game", "value_form", "value_season", "ict_index"
+                "chance_of_playing_next_round", "chance_of_playing_this_round", "ep_this", "ep_next",
+                "selected_by_percent", "transfers_in_event", "transfers_out_event"
+            FROM api_elements
+            )  as element_info
+        ON scores_player_lvl.element = element_info.id
+        
+    """
+
+    stats = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(stats.fetchall(), columns=stats.keys())
+
+    fix_these = ["bps", "t_bonus", "minutes", "goals_scored", "assists", "clean_sheets", "goals_conceded", "own_goals", 
+            "penalties_saved", "penalties_missed", "yellow_cards", "red_cards", "saves", "bonus", "team_a", "team_h", 
+            "fix_minutes", "score_3", "points"]
+    for i in fix_these: 
+        df[i] = df[i].fillna(0).astype(int)
+
+    stats = df.to_records(index=False)
+    stats = list(stats)
+
+    return render_template('fpl_team.html', stats=stats)
 
 @app.route('/run_search', methods= ['POST'])
 def run_search():
