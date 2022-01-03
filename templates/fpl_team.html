@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}FPL NAME HERE{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2">
+    <div class="row float-right">    
+        {{session['user_name']}}
+        {{session['user_entry']}}
+    </div>
+</div>
+
+<div class="container mt-2">
+    <div class="row">
+        <h2>[PLAYER NAME] - [PLAYER POINTS]pts</h2>
+    </div>
+
+    <div class="row">
+        <h6>YTD Rank: [CURRENT RANK] ([+\-]) - GW Rank: [GW RANK]</h6>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-sm text-xsmall table-hover sortable;">
+                    <thead class="thead-light text-center">
+                        <td>POS #</td>
+                        <td>Player</td>
+                        <td>POS</td>
+                        <td>Team</td>
+                        <td>Match</td>
+                        <td>Multiplier</td>
+                        <td>Score</td>
+                        <td>Mins (pl/gm)</td>
+                        <td>G</td>
+                        <td>A</td>
+                        <td>CS</td>
+                        <td>GC</td>
+                        <td>OG</td>
+                        <td>PS</td>
+                        <td>PM</td>
+                        <td>YC</td>
+                        <td>RC</td>
+                        <td>SV</td>
+                        <td>Bonus</td>
+                        <td>BPS</td>
+                        <td>Points</td>
+                        <td>Importance</td>
+                        <td>Status (Game | Player)</td>
+                        <td>Cost</td>
+                        <td>PPG</td>
+                        <td>Value</td>
+                        <td>ITC</td>
+                        <td>Projected</td>
+                      </thead>
+                    <tbody class="text-center align-middle">
+                        {% for i in stats %}
+                            <tr >
+                                <!-- <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td> -->
+                                <td>{{i[1]}}</td>
+                                <td>{{i[5]}}</td>
+                                {% if i[28] ==  "None" %}
+                                    <td>{{i[7]}}</td>
+                                {% else %}
+                                    <td>{{i[28]}}</td>
+                                {% endif %}
+                                <td>team</td>
+                                <td>{{i[23]}}|{{i[24]}}</td>
+                                <td>{{i[2]}}</td>
+                                <td>{{i[29]}}</td>
+                                <td>{{i[11]}}/{{i[25]}}</td>
+                                <td>{{i[12]}}</td>
+                                <td>{{i[13]}}</td>
+                                <td>{{i[14]}}</td>
+                                <td>{{i[15]}}</td>
+                                <td>{{i[16]}}</td>
+                                <td>{{i[17]}}</td>
+                                <td>{{i[18]}}</td>
+                                <td>{{i[19]}}</td>
+                                <td>{{i[20]}}</td>
+                                <td>{{i[21]}}</td>
+                                <td>{{i[22]}}</td>
+                                <td>{{i[9]}}</td>
+                                <td>{{i[30]}}</td>
+                                <td>To Do</td>
+                                <td>{{i[26]}} | {{i[27]}}</td>
+                                <td>{{i[32]}}</td>
+                                <td>{{i[33]}}</td>
+                                <td>{{i[34]}} | {{i[35]}} </td>
+                                <td>{{i[36]}}</td>
+                                <td>{{i[39]}}</td>
+
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
