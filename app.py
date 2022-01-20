@@ -1,6 +1,6 @@
 import os, sys
 import pandas as pd
-from datetime import datetime as dt
+import datetime as dt
 from flask import Flask, render_template, request, redirect, url_for, session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -123,7 +123,7 @@ def fpl_team(fpl_team_id):
             "element", "position", "multiplier", "is_captain", "is_vice_captain", "web_name", "team", "plural_name_short", 
             "fixture", "bps", "t_bonus", "minutes", "goals_scored", "assists", "clean_sheets", "goals_conceded", "own_goals", 
             "penalties_saved", "penalties_missed", "yellow_cards", "red_cards", "saves", "bonus", "team_a", "team_h", 
-            "fix_minutes", "status_game", "status_player", "position_name", "score_3", "points"
+            "fix_minutes", "status_game", "status_player", "position_name", "score_3", "points", "importance"
         FROM scores_player_lvl
         WHERE entry = {fpl_team_id}) as scores_player_lvl
         LEFT JOIN (
@@ -133,14 +133,30 @@ def fpl_team(fpl_team_id):
                 "selected_by_percent", "transfers_in_event", "transfers_out_event"
             FROM api_elements
             )  as element_info
-        ON scores_player_lvl.element = element_info.id
-        
+            ON scores_player_lvl.element = element_info.id
+        LEFT JOIN (
+            SELECT "id" as "team_id", "short_name" FROM api_teams
+            ) as player_team
+            ON "team" = player_team.team_id
+        LEFT JOIN (
+            SELECT "id" as "h_team_id", "short_name" as "home" FROM api_teams
+            ) as home_team
+            ON "team_h" = home_team.h_team_id
+        LEFT JOIN (
+            SELECT "id" as "a_team_id", "short_name" as "away" FROM api_teams
+            ) as away_team
+            ON "team_a" = away_team.a_team_id
+        ORDER BY "position"
     """
 
     stats = db.execute(q)
     db.commit()
 
     df = pd.DataFrame(stats.fetchall(), columns=stats.keys())
+
+    df['position_name'] = df['position_name'].fillna("None")
+
+    print(df['position_name'].value_counts())
 
     fix_these = ["bps", "t_bonus", "minutes", "goals_scored", "assists", "clean_sheets", "goals_conceded", "own_goals", 
             "penalties_saved", "penalties_missed", "yellow_cards", "red_cards", "saves", "bonus", "team_a", "team_h", 
