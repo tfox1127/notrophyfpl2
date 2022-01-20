@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}FPL - Cup Info{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2">
+    <div class="row float-right">    
+        {{session['user_name']}}
+        {{session['user_entry']}}
+    </div>
+</div>
+
+<!-- <div class="container mt-2">
+    <h2>FPL Cup Info</h2>
+    <h6>Updated [todo]</h6>
+</div> -->
+
+<div class="container mt-2">
+    <h3>Group A</h3>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-sm text-xsmall table-hover sortable;">
+                    <thead class="thead-light text-center align-middle">
+                        <td>Group</td>
+                        <td>Name</td>
+                        <td>Points</td>
+                        <td>W</td>
+                        <td>D</td>
+                        <td>L</td>
+                    </thead>
+                    <tbody class="text-center align-middle">
+                        {% for i in cup_table_a %}
+                            <tr >
+                                <td>{{i[0]}}</td>
+                                <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[4]}}</td>
+                                <td>{{i[5]}}</td>
+                                <td>{{i[6]}}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2">
+    <h3>Group B</h3>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-sm text-xsmall table-hover sortable;">
+                    <thead class="thead-light text-center align-middle">
+                        <td>Group</td>
+                        <td>Name</td>
+                        <td>Points</td>
+                        <td>W</td>
+                        <td>D</td>
+                        <td>L</td>
+                    </thead>
+                    <tbody class="text-center align-middle">
+                        {% for i in cup_table_b %}
+                            <tr >
+                                <td>{{i[0]}}</td>
+                                <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[4]}}</td>
+                                <td>{{i[5]}}</td>
+                                <td>{{i[6]}}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2">
+    <h3>Group C</h3>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-sm text-xsmall table-hover sortable;">
+                    <thead class="thead-light text-center align-middle">
+                        <td>Group</td>
+                        <td>Name</td>
+                        <td>Points</td>
+                        <td>W</td>
+                        <td>D</td>
+                        <td>L</td>
+                    </thead>
+                    <tbody class="text-center align-middle">
+                        {% for i in cup_table_c %}
+                            <tr >
+                                <td>{{i[0]}}</td>
+                                <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[4]}}</td>
+                                <td>{{i[5]}}</td>
+                                <td>{{i[6]}}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2">
+    <h3>Group D</h3>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-sm text-xsmall table-hover sortable;">
+                    <thead class="thead-light text-center align-middle">
+                        <td>Group</td>
+                        <td>Name</td>
+                        <td>Points</td>
+                        <td>W</td>
+                        <td>D</td>
+                        <td>L</td>
+                    </thead>
+                    <tbody class="text-center align-middle">
+                        {% for i in cup_table_d %}
+                            <tr >
+                                <td>{{i[0]}}</td>
+                                <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[4]}}</td>
+                                <td>{{i[5]}}</td>
+                                <td>{{i[6]}}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2">
+    <h3>Group E</h3>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-sm text-xsmall table-hover sortable;">
+                    <thead class="thead-light text-center align-middle">
+                        <td>Group</td>
+                        <td>Name</td>
+                        <td>Points</td>
+                        <td>W</td>
+                        <td>D</td>
+                        <td>L</td>
+                    </thead>
+                    <tbody class="text-center align-middle">
+                        {% for i in cup_table_e %}
+                            <tr >
+                                <td>{{i[0]}}</td>
+                                <td><a href="team/{{i[1]}}" class="text-dark">{{i[2]}}</a></td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[4]}}</td>
+                                <td>{{i[5]}}</td>
+                                <td>{{i[6]}}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

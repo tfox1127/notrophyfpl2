@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}FPL NAME HERE{% endblock %}
+{% block title %}{{heading[0][1]}} - {{heading[0][2]}}pts{% endblock %}
 
 {% block content %}
 
@@ -13,11 +13,11 @@
 
 <div class="container mt-2">
     <div class="row">
-        <h2>[PLAYER NAME] - [PLAYER POINTS]pts</h2>
+        <h2>{{heading[0][1]}} - {{heading[0][2]}}pts</h2>
     </div>
 
     <div class="row">
-        <h6>YTD Rank: [CURRENT RANK] ([+\-]) - GW Rank: [GW RANK]</h6>
+        <h6>YTD Rank: {{heading[0][4]}} ({{heading[0][5]}}) - GW Rank: {{heading[0][6]}}</h6>
     </div>
 
     <div class="row">

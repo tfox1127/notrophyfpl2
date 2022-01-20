@@ -96,18 +96,21 @@ def fpl_live():
     live_table = df.to_records(index=False)
     live_table = list(live_table)
 
-    #ACTIVE GAMES 
+    # GROUP STAGE
     groups = db.execute(f"""SELECT 
                         "Team 1 ID", "Team 1 Name", "score_1", "price_pct_str_1",
                         "Team 2 ID", "Team 2 Name", "score_2", "price_pct_str_2",
                         "Group"
                         FROM 
-        (SELECT "Group", "Team 1 ID", "Team 2 ID", "Team 1 Name", "Team 2 Name" FROM tbl_2122_groups WHERE "GW" = {CURRENT_WEEK}) as GROUPS
+            (SELECT "Group", "Team 1 ID", "Team 2 ID", "Team 1 Name", "Team 2 Name" 
+                FROM tbl_2122_groups WHERE "GW" = {CURRENT_WEEK}) as GROUPS
         LEFT JOIN 
-            (SELECT "entry" as entry_1, "score_3" as score_1, "price_pct_str" as "price_pct_str_1" FROM "calc_score_parts") as SCOREBOARD_1
+            (SELECT "entry" as entry_1, "score_3" as score_1, "price_pct_str" as "price_pct_str_1" 
+            FROM "calc_score_parts") as SCOREBOARD_1
                 ON GROUPS."Team 1 ID" = SCOREBOARD_1.entry_1
         LEFT JOIN 
-            (SELECT "entry" as entry_2, "score_3" as score_2, "price_pct_str" as "price_pct_str_2" FROM "calc_score_parts") as SCOREBOARD_2
+            (SELECT "entry" as entry_2, "score_3" as score_2, "price_pct_str" as "price_pct_str_2" 
+            FROM "calc_score_parts") as SCOREBOARD_2
                 ON GROUPS."Team 2 ID" = SCOREBOARD_2.entry_2
         ORDER BY "Group"
         """)
@@ -118,6 +121,36 @@ def fpl_live():
 
 @app.route('/team/<int:fpl_team_id>')
 def fpl_team(fpl_team_id):
+
+    # heading
+    q = f""" 
+        SELECT 
+            calc_score_parts.entry, 
+            CASE name
+                WHEN 'NO_CHIP' THEN player_name
+                ELSE CONCAT(player_name, ' (', name, ')')
+                END AS player_name,        
+            CAST(score_3 AS int) as score_3, 
+            CAST(calc_score_parts.total_points - calc_score_parts.event_transfers_cost + calc_score_parts.score_3 AS int) as Total,
+            rank_live, 
+            change_str
+        FROM calc_score_parts
+        LEFT JOIN 
+            (SELECT entry, player_name FROM api_standings) as names
+            ON calc_score_parts.entry = names.entry
+        WHERE calc_score_parts.entry = {fpl_team_id}
+        ORDER BY rank_live        
+    """
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    df['rang_gw'] = df['score_3'].rank(method='min', ascending=False).fillna(0).round().astype(int)
+    dfr = df.to_records(index=False)
+    heading = list(dfr)
+
+    #body
     q = f""" SELECT * FROM 
         (SELECT 
             "element", "position", "multiplier", "is_captain", "is_vice_captain", "web_name", "team", "plural_name_short", 
@@ -167,7 +200,7 @@ def fpl_team(fpl_team_id):
     stats = df.to_records(index=False)
     stats = list(stats)
 
-    return render_template('fpl_team.html', stats=stats)
+    return render_template('fpl_team.html', heading=heading, stats=stats)
 
 @app.route('/run_search', methods= ['POST'])
 def run_search():
@@ -182,6 +215,74 @@ def run_search():
 
         db.commit()
         return render_template('fpl_search_results.html', elements=elements, search_for=search_for)
+
+@app.route('/fpl_cup')
+def fpl_cup():
+    # cup table - GROUP A
+    q = f""" SELECT "Group", "Team", "Name", CAST("Points" as INT), CAST("W" as INT), CAST("D" as INT), CAST("L" as INT) 
+    FROM cup_static_table
+    WHERE "Group" = 'A' """
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    dfr = df.to_records(index=False)
+    cup_table_a = list(dfr)
+
+    # cup table - GROUP B
+    q = f""" SELECT "Group", "Team", "Name", CAST("Points" as INT), CAST("W" as INT), CAST("D" as INT), CAST("L" as INT) 
+    FROM cup_static_table
+    WHERE "Group" = 'B' """
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    dfr = df.to_records(index=False)
+    cup_table_b = list(dfr)
+
+    # cup table - GROUP C
+    q = f""" SELECT "Group", "Team", "Name", CAST("Points" as INT), CAST("W" as INT), CAST("D" as INT), CAST("L" as INT) 
+    FROM cup_static_table
+    WHERE "Group" = 'C' """
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    dfr = df.to_records(index=False)
+    cup_table_c = list(dfr)
+
+    # cup table - GROUP D
+    q = f""" SELECT "Group", "Team", "Name", CAST("Points" as INT), CAST("W" as INT), CAST("D" as INT), CAST("L" as INT) 
+    FROM cup_static_table
+    WHERE "Group" = 'D' """
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    dfr = df.to_records(index=False)
+    cup_table_d = list(dfr)
+
+    # cup table - GROUP E
+    q = f""" SELECT "Group", "Team", "Name", CAST("Points" as INT), CAST("W" as INT), CAST("D" as INT), CAST("L" as INT) 
+    FROM cup_static_table
+    WHERE "Group" = 'E' """
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    dfr = df.to_records(index=False)
+    cup_table_e = list(dfr)
+
+    return render_template('fpl_cup.html', cup_table_a=cup_table_a, 
+        cup_table_b=cup_table_b, 
+        cup_table_c=cup_table_c, 
+        cup_table_d=cup_table_d, 
+        cup_table_e=cup_table_e)
 
 if __name__ == '__main__':
     app.run()
