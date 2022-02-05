@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+
+{% block title %}FPL - Compare Teams{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h2>Captain</h2>
+    </div>
+
+    <div class="row">
+        <h5>{{t1_name[0][1]}}</h5>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t1_cap %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <h5>{{t2_name[0][1]}}</h5>
+    </div>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t2_cap %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <h2>Keepers</h2>
+    </div>
+
+    <div class="row">
+        <h5>{{t1_name[0][1]}}</h5>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t1_gkp %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <h5>{{t2_name[0][1]}}</h5>
+    </div>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t2_gkp %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="container">
+    <!-- <div class="col-md-12 text-center"> -->
+    <div class="row">
+        <h2>Defense</h2>
+    </div>
+
+    <div class="row">
+        <h5>{{t1_name[0][1]}}</h5>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t1_def %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <h5>{{t2_name[0][1]}}</h5>
+    </div>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t2_def %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <h2>Mids</h2>
+    </div>
+
+    <div class="row">
+        <h5>{{t1_name[0][1]}}</h5>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t1_mid %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <h5>{{t2_name[0][1]}}</h5>
+    </div>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t2_mid %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <h2>Forwards</h2>
+    </div>
+
+    <div class="row">
+        <h5>{{t1_name[0][1]}}</h5>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t1_fwd %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <h5>{{t2_name[0][1]}}</h5>
+    </div>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Player</td>
+                <td class="align-middle">Multipler</td>
+                <td class="align-middle">Match</td>
+                <td class="align-middle">Status (m|p)</td>
+                <td class="align-middle">Points</td>
+                <td class="align-middle">Score</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for dd in t2_fwd %}
+                <tr>
+                    <td><a href="/player/{{dd[0]}}" class="text-dark">{{dd[1]}}</a></td>
+                    <td class="align-middle">{{dd[4]}}</td>
+                    <td class="align-middle">{{dd[7]}}</td>
+                    <td class="align-middle">{{dd[5]}}</td>
+                    <td class="align-middle">{{dd[6]}}</td>
+                    <td class="align-middle">{{dd[8]}}</td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

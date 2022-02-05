@@ -100,9 +100,9 @@ def fpl_live():
     groups = db.execute(f"""SELECT 
                         "Team 1 ID", "Team 1 Name", "score_1", "price_pct_str_1",
                         "Team 2 ID", "Team 2 Name", "score_2", "price_pct_str_2",
-                        "Group"
+                        "Group", "Match ID"
                         FROM 
-            (SELECT "Group", "Team 1 ID", "Team 2 ID", "Team 1 Name", "Team 2 Name" 
+            (SELECT "Match ID", "Group", "Team 1 ID", "Team 2 ID", "Team 1 Name", "Team 2 Name" 
                 FROM tbl_2122_groups WHERE "GW" = {CURRENT_WEEK}) as GROUPS
         LEFT JOIN 
             (SELECT "entry" as entry_1, "score_3" as score_1, "price_pct_str" as "price_pct_str_1" 
@@ -201,6 +201,146 @@ def fpl_team(fpl_team_id):
     stats = list(stats)
 
     return render_template('fpl_team.html', heading=heading, stats=stats)
+
+@app.route('/compare/<int:team1>/<int:team2>')
+def compare(team1, team2): 
+    
+    q_base = f""" SELECT "element", "web_name", "plural_name_short", "player_name", "multiplier", CONCAT("status_game", ' | ', "status_player") as status, CAST("score_3" as INT), CONCAT("home", ' | ', "away") as match, CAST("points" as INT)
+            FROM (
+                SELECT "element", "web_name", "plural_name_short", "player_name", "multiplier", 
+                    "status_game", "status_player", "score_3", "points", "team_h", "team_a", "entry" FROM scores_player_lvl) as main
+            LEFT JOIN (
+                SELECT "id" as "h_team_id", "short_name" as "home" FROM api_teams) as home_team
+                ON "team_h" = home_team.h_team_id
+            LEFT JOIN (
+                SELECT "id" as "a_team_id", "short_name" as "away" FROM api_teams) as away_team
+                ON "team_a" = away_team.a_team_id
+    """
+
+    ###############################################################
+    ###############################################################
+    # CAPTAIN
+    #TEAM 1 
+    q_var = f"""WHERE entry = {team1} AND multiplier > 1
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t1_cap = db.execute(q)
+    db.commit()
+
+    #TEAM 2 
+    q_var = f"""WHERE entry = {team2} AND multiplier > 1
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t2_cap = db.execute(q)
+    db.commit()
+
+    ###############################################################
+    ###############################################################
+    # GKP 
+    #TEAM 1 
+    q_var = f"""WHERE entry = {team1} AND plural_name_short = 'GKP' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t1_gkp = db.execute(q)
+    db.commit()
+
+    #TEAM 2 
+    q_var = f"""WHERE entry = {team2} AND plural_name_short = 'GKP' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t2_gkp = db.execute(q)
+    db.commit()
+
+    ###############################################################
+    ###############################################################
+    # DEF 
+    #TEAM 1 
+    q_var = f"""WHERE entry = {team1} AND plural_name_short = 'DEF' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t1_def = db.execute(q)
+    db.commit()
+
+    #TEAM 2 
+    q_var = f"""WHERE entry = {team2} AND plural_name_short = 'DEF' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t2_def = db.execute(q)
+    db.commit()
+
+    ###############################################################
+    ###############################################################
+    # MID 
+    #TEAM 1 
+    q_var = f"""WHERE entry = {team1} AND plural_name_short = 'MID' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t1_mid = db.execute(q)
+    db.commit()
+
+    #TEAM 2 
+    q_var = f"""WHERE entry = {team2} AND plural_name_short = 'MID' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t2_mid = db.execute(q)
+    db.commit()
+
+    ###############################################################
+    ###############################################################
+    # FWD 
+    #TEAM 1 
+    q_var = f"""WHERE entry = {team1} AND plural_name_short = 'FWD' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t1_fwd = db.execute(q)
+    db.commit()
+
+    #TEAM 2 
+    q_var = f"""WHERE entry = {team2} AND plural_name_short = 'FWD' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t2_fwd = db.execute(q)
+    db.commit()
+
+    q = f"""SELECT entry, player_name FROM api_standings WHERE entry = {team1}"""
+    t1_name = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(t1_name.fetchall(), columns=t1_name.keys())
+    t1_name = df.to_records(index=False)
+    t1_name = list(t1_name)
+
+    q = f"""SELECT entry, player_name FROM api_standings WHERE entry = {team2}"""
+    t2_name = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(t2_name.fetchall(), columns=t2_name.keys())
+    t2_name = df.to_records(index=False)
+    t2_name = list(t2_name)
+
+    return render_template('compare.html', t1_cap=t1_cap, t2_cap=t2_cap, t1_gkp=t1_gkp, t2_gkp=t2_gkp 
+                                         , t1_def=t1_def, t2_def=t2_def, t1_mid=t1_mid, t2_mid=t2_mid
+                                         , t1_fwd=t1_fwd, t2_fwd=t2_fwd, t1_name=t1_name, t2_name=t2_name)
 
 @app.route('/run_search', methods= ['POST'])
 def run_search():

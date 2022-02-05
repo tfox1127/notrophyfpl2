@@ -63,49 +63,55 @@
     <div class="row">
         <h2>Group Stage</h2>
     </div>
-    
+
     <div class="table-responsive text-nowrap">
         <table class="table table-sm text-xsmall table-hover sortable ;">
-        <thead class="thead-light text-center align-middle">
-            <td class="align-middle">Group</td>
-            <td class="align-middle">Team 1</td>
-            <td class="align-middle">t1_Score</td>
-            <td class="align-middle">t1_SP</td>
-            <td class="align-middle">Team 2</td>
-            <td class="align-middle">t2_Score</td>
-            <td class="align-middle">t2_SP</td>
-        </thead>
-        <tbody class="text-center align-middle">
-            {% for group in groups %}
-            <tr>
-            <td class="align-middle">{{group[8]}}</td>
-            {% if group[2] > group[6] %}
-                <td style="background-color: #08ff87;" class="align-middle"><a href="/teams30/{{group[0]}}" class="text-dark">{{group[1]}}</a></td>
-                <td style="background-color: #08ff87;" class="align-middle">{{group[2]}}</td>
-                <td style="background-color: #08ff87;" class="align-middle">{{group[3]}}</td>
-                <td class="align-middle"><a href="/team/{{group[4]}}" class="text-dark">{{group[5]}}</a></td>
-                <td class="align-middle">{{group[6]}}</td>
-                <td class="align-middle">{{group[7]}}</td>
-            {% elif  group[2] < group[6] %}
-                <td class="align-middle"><a href="/team/{{group[0]}}" class="text-dark">{{group[1]}}</a></td>
-                <td class="align-middle">{{group[2]}}</td>
-                <td class="align-middle">{{group[3]}}</td>
-                <td style="background-color: #08ff87;" class="align-middle"><a href="/teams30/{{group[4]}}" class="text-dark">{{group[5]}}</a></td>
-                <td style="background-color: #08ff87;" class="align-middle">{{group[6]}}</td>
-                <td style="background-color: #08ff87;" class="align-middle">{{group[7]}}</td>
-            {% else %}
-                <td class="align-middle"><a href="/team/{{group[0]}}" class="text-dark">{{group[1]}}</a></td>
-                <td class="align-middle">{{group[2]}}</td>
-                <td class="align-middle">{{group[3]}}</td>
-                <td class="align-middle"><a href="/team/{{group[4]}}" class="text-dark">{{group[5]}}</a></td>
-                <td class="align-middle">{{group[6]}}</td>
-                <td class="align-middle">{{group[7]}}</td>
-            {% endif %}
-            
-            </tr>
-            {% endfor %}
-        </tbody>
+            <thead class="thead-light text-center align-middle">
+                <td class="align-middle">Group</td>
+                <td class="align-middle">Match ID</td>
+                <td class="align-middle">Team 1</td>
+                <td class="align-middle">t1_Score</td>
+                <td class="align-middle">t1_SP</td>
+                <td class="align-middle">Team 2</td>
+                <td class="align-middle">t2_Score</td>
+                <td class="align-middle">t2_SP</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for group in groups %}
+                <tr>
+                    <td class="align-middle">{{group[8]}}</td>
+                    <td class="align-middle"><a href="/compare/{{group[0]}}/{{group[4]}}"
+                            class="text-dark">{{group[9]}}</a></td>
+                    {% if group[2] > group[6] %}
+                    <td style="background-color: #08ff87;" class="align-middle"><a href="/team/{{group[0]}}"
+                            class="text-dark">{{group[1]}}</a></td>
+                    <td style="background-color: #08ff87;" class="align-middle">{{group[2]}}</td>
+                    <td style="background-color: #08ff87;" class="align-middle">{{group[3]}}</td>
+                    <td class="align-middle"><a href="/team/{{group[4]}}" class="text-dark">{{group[5]}}</a></td>
+                    <td class="align-middle">{{group[6]}}</td>
+                    <td class="align-middle">{{group[7]}}</td>
+                    {% elif group[2] < group[6] %} <td class="align-middle"><a href="/team/{{group[0]}}"
+                            class="text-dark">{{group[1]}}</a></td>
+                        <td class="align-middle">{{group[2]}}</td>
+                        <td class="align-middle">{{group[3]}}</td>
+                        <td style="background-color: #08ff87;" class="align-middle"><a href="/team/{{group[4]}}"
+                                class="text-dark">{{group[5]}}</a></td>
+                        <td style="background-color: #08ff87;" class="align-middle">{{group[6]}}</td>
+                        <td style="background-color: #08ff87;" class="align-middle">{{group[7]}}</td>
+                        {% else %}
+                        <td class="align-middle"><a href="/team/{{group[0]}}" class="text-dark">{{group[1]}}</a></td>
+                        <td class="align-middle">{{group[2]}}</td>
+                        <td class="align-middle">{{group[3]}}</td>
+                        <td class="align-middle"><a href="/team/{{group[4]}}" class="text-dark">{{group[5]}}</a></td>
+                        <td class="align-middle">{{group[6]}}</td>
+                        <td class="align-middle">{{group[7]}}</td>
+                        {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
+
+</div>
 
 {% endblock %}
