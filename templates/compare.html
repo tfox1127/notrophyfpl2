@@ -8,6 +8,8 @@
 
         <div class="row"><h2>{{t1_name[0][1]}} vs {{t2_name[0][1]}}</h2></div>
 
+        {{t1_lineup}}
+        {{t1_bench}}
         <div class="accordion" id="accordionExample">
 
             <div class="card">
@@ -220,7 +222,6 @@
                 </div>
             </div>
 
-
             <div class="card">
                 <div class="card-header" id="headingFour>
                     <h5 class=" mb-0">
@@ -356,6 +357,93 @@
                                 </table>
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" id="headingSix">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" style= "color: #37003c"
+                            data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            Summary
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12"> 
+                                    <h5>Owned by both teams</h5>
+                                    <div class="table-responsive text-nowrap">
+                                        <table class="table table-sm text-xsmall table-hover sortable ;">
+                                            <thead class="thead-light text-center align-middle">
+                                                <td class="align-middle" style="width:50%" >Player</td>
+                                                <td class="align-middle" style="width:50%" >Points</td>
+                                            </thead>
+                                            <tbody class="text-center align-middle">
+                                                {% for dd in both %}
+                                                <tr>
+                                                    <td class="align-middle">{{dd[0]}}</td>
+                                                    <td class="align-middle">{{dd[2]}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                
+                            
+                            <div class="col-6"> 
+                                <h5>{{t1_name[0][1]}}</h5>
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table table-sm text-xsmall table-hover sortable ;">
+                                        <thead class="thead-light text-center align-middle">
+                                            <td class="align-middle" style="width:40%" >Player</td>
+                                            <td class="align-middle" style="width:40%" >Match</td>
+                                            <td class="align-middle" style="width:20%" >Score</td> 
+                                        </thead>
+                                        <tbody class="text-center align-middle">
+                                            {% for dd in diff_1 %}
+                                            <tr>
+                                                <td class="align-middle">{{dd[0]}}</td>
+                                                <td class="align-middle">{{dd[1]}}</td>
+                                                <td class="align-middle">{{dd[2]}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6"> 
+                                <h5>{{t2_name[0][1]}}</h5>
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table table-sm text-xsmall table-hover sortable ;">
+                                        <thead class="thead-light text-center align-middle">
+                                            <td class="align-middle" style="width:30%" >Player</td>
+                                            <td class="align-middle" style="width:30%" >Match</td>
+                                            <td class="align-middle" style="width:20%" >Score</td>     
+                                            <td class="align-middle" style="width:20%" >Score</td>
+                                        </thead>
+                                        <tbody class="text-center align-middle">
+                                            {% for dd in diff_2 %}
+                                            <tr>
+                                                <td class="align-middle">{{dd[0]}}</td>
+                                                <td class="align-middle">{{dd[1]}}</td>
+                                                <td class="align-middle">{{dd[2]}}</td>
+                                                <td class="align-middle">{{dd[3]}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>

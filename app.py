@@ -202,10 +202,74 @@ def fpl_team(fpl_team_id):
 
     return render_template('fpl_team.html', heading=heading, stats=stats)
 
+def make_roster(df, team): 
+    df1_roster = df.loc[df['entry'] == team, 'element'].drop_duplicates().to_list()
+
+    bench = []
+    lineup = []
+    for i in df1_roster: 
+        multi = df.loc[(df['entry'] == team) & (df['element'] == i), 'multiplier'].drop_duplicates().item()
+        
+        if multi == 0: 
+            bench.append(i)
+        elif multi == 1: 
+            lineup.append(i)
+        elif multi > 1: 
+            for j in range(multi): 
+                lineup.append(i) 
+
+    return lineup, bench
+
+def compare_rosters(row, t1_lineup, t2_lineup, t1_bench, t2_bench):
+    
+    if (row['element'] in (t1_lineup)) & (row['element'] in (t2_lineup)):
+        val = "both"
+    elif (row['element'] in (t1_lineup)):
+        if row['element'] in (t2_bench): 
+            val = "team 1 only (other bench)"
+        else: 
+            val = "team 1 only"
+    elif (row['element'] in (t2_lineup)):
+        if row['element'] in (t1_bench): 
+            val = "team 2 only (other bench)"
+        else: 
+            val = "team 2 only"
+        
+    else:
+        val = "bench?"
+
+    return val
+
+def compare_captain(row):
+    if (row['multiplier'] > 1):
+        val = row['web_name'] + "(" + str(row['multiplier']) + "x)"
+    else:
+        val = row['web_name']
+
+    return val
+
+def compare_rollup_player(row):
+    if (row['status_game'] == "Game Over"):
+        val = "rollup"
+    else:
+        val = row['web_name_adj']
+
+    return val
+
+def compare_rollup_match(row):
+    if (row['status_game'] == "Game Over"):
+        val = "rollup"
+    else:
+        val = row['match']
+
+    return val
+
 @app.route('/compare/<int:team1>/<int:team2>')
 def compare(team1, team2): 
     
-    q_base = f""" SELECT "element", "web_name", "plural_name_short", "player_name", "multiplier", CONCAT("status_game", ' | ', "status_player") as status, CAST("score_3" as INT), CONCAT("home", ' | ', "away") as match, CAST("points" as INT)
+    q_base = f""" SELECT "element", "web_name", "plural_name_short", "player_name", "multiplier", 
+                CONCAT("status_game", ' | ', "status_player") as status, CAST("score_3" as INT), 
+                CONCAT("home", ' | ', "away") as match, CAST("points" as INT), "entry", "status_game" 
             FROM (
                 SELECT "element", "web_name", "plural_name_short", "player_name", "multiplier", 
                     "status_game", "status_player", "score_3", "points", "team_h", "team_a", "entry" FROM scores_player_lvl) as main
@@ -338,9 +402,56 @@ def compare(team1, team2):
     t2_name = df.to_records(index=False)
     t2_name = list(t2_name)
 
+    #TEAM 2 
+    q_var = f"""WHERE entry = {team2} AND plural_name_short = 'FWD' AND multiplier < 2
+                ORDER BY score_3 DESC"""
+
+    q = q_base + q_var
+
+    t2_fwd = db.execute(q)
+    db.commit()
+
+    #ROSTERS 
+    q_var = f"""WHERE entry = {team1} or entry = {team2}"""
+
+    q = q_base + q_var
+    
+    d= db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    df.loc[df['match'] == 'BUR | WAT', 'status_game'] = "Pending"    
+
+    t1_lineup, t1_bench = make_roster(df, team1)
+    t2_lineup, t2_bench = make_roster(df, team2)
+
+    df['compare'] = df.apply(compare_rosters, args=(t1_lineup, t2_lineup, t1_bench, t2_bench), axis=1)
+    df['web_name_adj'] = df.apply(compare_captain, axis=1)
+    df['rollup_player'] = df.apply(compare_rollup_player, axis=1)
+    df['rollup_match'] = df.apply(compare_rollup_match, axis=1)
+
+    dft = df.loc[(df['compare'] == "both"), :]
+    both = pd.pivot_table(dft, index='rollup_player', columns='player_name', values='score_3', aggfunc='sum').reset_index()
+    both = both.to_records(index=False)
+    both = list(both)
+
+    #dft = df.loc[(df['compare'].isin(['team 1 only (other bench)', 'team 1 only'])), :]
+    dft = df.loc[(df['compare'].isin(['team 1 only (other bench)', 'team 1 only'])), :]
+    diff_1 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name', values='score_3', aggfunc='sum').reset_index()
+    diff_1 = diff_1.to_records(index=False)
+    diff_1 = list(diff_1)
+
+    dft = df.loc[(df['compare'].isin(['team 2 only (other bench)', 'team 2 only'])), :]
+    #dft = df.loc[(df['compare'].isin(['team 2 only'])), :]
+    diff_2 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name', values='score_3', aggfunc='sum').reset_index()
+    diff_2 = diff_2.to_records(index=False)
+    diff_2 = list(diff_2)
+
     return render_template('compare.html', t1_cap=t1_cap, t2_cap=t2_cap, t1_gkp=t1_gkp, t2_gkp=t2_gkp 
                                          , t1_def=t1_def, t2_def=t2_def, t1_mid=t1_mid, t2_mid=t2_mid
-                                         , t1_fwd=t1_fwd, t2_fwd=t2_fwd, t1_name=t1_name, t2_name=t2_name)
+                                         , t1_fwd=t1_fwd, t2_fwd=t2_fwd, t1_name=t1_name, t2_name=t2_name,
+                                         both=both, diff_1=diff_1, 
+                                         diff_2=diff_2, t2_bench=t2_bench)
 
 @app.route('/run_search', methods= ['POST'])
 def run_search():
