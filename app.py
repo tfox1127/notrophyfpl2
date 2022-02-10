@@ -473,7 +473,10 @@ def compare(team1, team2):
     diff_2 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
     diff_2 = diff_2.sort_values('team2',ascending=False)
     diff_2['team2'] = diff_2['team2'].astype(int)
-    diff_2 = diff_2.drop(columns=['team1'])
+    try: 
+        diff_2 = diff_2.drop(columns=['team1'])
+    except: 
+        pass
     diff_2 = diff_2.to_records(index=False)
     
     diff_2 = list(diff_2)
