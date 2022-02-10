@@ -5,11 +5,10 @@
     {% block content %}
 
     <div class="container">
-
-        <div class="row"><h2>{{score_1}} : {{t1_name[0][1]}}<br>{{score_2}} : {{t2_name[0][1]}}</h2></div>
-
-        {{t1_lineup}}
-        {{t1_bench}}
+        <div class="container">
+            <div class="row"><h4>{{t1_name[0][1]}} ({{score_1}})<br>{{t2_name[0][1]}} ({{score_2}})</h4></div>
+        </div>
+        
         <div class="accordion" id="accordionExample">
 
             <div class="card">
@@ -400,7 +399,7 @@
                                 
                             
                             <div class="col-6"> 
-                                <h5>{{t1_name[0][1]}}</h5>
+                                <h5>{{t1_name[0][1]}} ({{score_1}})</h5>
                                 <div class="table-responsive text-nowrap">
                                     <table class="table table-sm text-xsmall table-hover sortable ;">
                                         <thead class="thead-light text-center align-middle">
@@ -422,7 +421,7 @@
                                 </div>
                             </div>
                             <div class="col-6"> 
-                                <h5>{{t2_name[0][1]}}</h5>
+                                <h5>{{t2_name[0][1]}} ({{score_2}}) </h5>
                                 <div class="table-responsive text-nowrap">
                                     <table class="table table-sm text-xsmall table-hover sortable ;">
                                         <thead class="thead-light text-center align-middle">
