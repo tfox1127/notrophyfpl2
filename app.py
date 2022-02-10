@@ -1,4 +1,5 @@
 import os, sys
+from webbrowser import get
 import pandas as pd
 import datetime as dt
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -54,7 +55,8 @@ def login():
 
 @app.route('/fpl_live')
 def fpl_live():
-
+    CURRENT_WEEK, FIRST_UNFINISHED_WEEK = api_check.pull_current_week()
+    
     q = """ 
         SELECT rank_live, 
             calc_score_parts.entry, 
@@ -250,7 +252,7 @@ def compare_captain(row):
 
 def compare_rollup_player(row):
     if (row['status_game'] == "Game Over"):
-        val = "rollup"
+        val = "Match Over"
     else:
         val = row['web_name_adj']
 
@@ -258,11 +260,23 @@ def compare_rollup_player(row):
 
 def compare_rollup_match(row):
     if (row['status_game'] == "Game Over"):
-        val = "rollup"
+        val = "-"
     else:
         val = row['match']
 
     return val
+
+def get_score(team):
+    q = f""" SELECT CAST(score_3 AS int) as score_3 FROM calc_score_parts WHERE entry = {team}"""
+
+    d = db.execute(q)
+    db.commit()
+
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    
+    return df.score_3.item()
+
+
 
 @app.route('/compare/<int:team1>/<int:team2>')
 def compare(team1, team2): 
@@ -430,28 +444,38 @@ def compare(team1, team2):
     df['rollup_player'] = df.apply(compare_rollup_player, axis=1)
     df['rollup_match'] = df.apply(compare_rollup_match, axis=1)
 
+    m = {team1 : "team1", team2: "team2"}
+    df['player_name_2'] = df['entry'].map(m)
+
     dft = df.loc[(df['compare'] == "both"), :]
-    both = pd.pivot_table(dft, index='rollup_player', columns='player_name', values='score_3', aggfunc='sum').reset_index()
+    both = pd.pivot_table(dft, index='rollup_player', columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
+    both.to_clipboard()
+    both = both.sort_values("team1", ascending=False)
     both = both.to_records(index=False)
     both = list(both)
 
     #dft = df.loc[(df['compare'].isin(['team 1 only (other bench)', 'team 1 only'])), :]
     dft = df.loc[(df['compare'].isin(['team 1 only (other bench)', 'team 1 only'])), :]
-    diff_1 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name', values='score_3', aggfunc='sum').reset_index()
+    diff_1 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
+    diff_1 = diff_1.sort_values('team1',ascending=False)
     diff_1 = diff_1.to_records(index=False)
     diff_1 = list(diff_1)
 
     dft = df.loc[(df['compare'].isin(['team 2 only (other bench)', 'team 2 only'])), :]
     #dft = df.loc[(df['compare'].isin(['team 2 only'])), :]
-    diff_2 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name', values='score_3', aggfunc='sum').reset_index()
+    diff_2 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
+    diff_2 = diff_2.sort_values('team2',ascending=False)
     diff_2 = diff_2.to_records(index=False)
     diff_2 = list(diff_2)
 
-    return render_template('compare.html', t1_cap=t1_cap, t2_cap=t2_cap, t1_gkp=t1_gkp, t2_gkp=t2_gkp 
-                                         , t1_def=t1_def, t2_def=t2_def, t1_mid=t1_mid, t2_mid=t2_mid
-                                         , t1_fwd=t1_fwd, t2_fwd=t2_fwd, t1_name=t1_name, t2_name=t2_name,
-                                         both=both, diff_1=diff_1, 
-                                         diff_2=diff_2, t2_bench=t2_bench)
+    score_1 = get_score(team1)
+    score_2 = get_score(team2)
+
+    return render_template('compare.html', t1_cap=t1_cap, t2_cap=t2_cap, t1_gkp=t1_gkp, t2_gkp=t2_gkp, 
+                                            t1_def=t1_def, t2_def=t2_def, t1_mid=t1_mid, t2_mid=t2_mid, 
+                                            t1_fwd=t1_fwd, t2_fwd=t2_fwd, t1_name=t1_name, t2_name=t2_name, 
+                                            both=both, diff_1=diff_1, diff_2=diff_2, t2_bench=t2_bench, 
+                                            score_1=score_1, score_2=score_2)
 
 @app.route('/run_search', methods= ['POST'])
 def run_search():
