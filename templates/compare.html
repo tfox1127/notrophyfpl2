@@ -380,12 +380,14 @@
                                         <table class="table table-sm text-xsmall table-hover sortable ;">
                                             <thead class="thead-light text-center align-middle">
                                                 <td class="align-middle" style="width:50%" >Player</td>
-                                                <td class="align-middle" style="width:50%" >Score</td>
+                                                <td class="align-middle" style="width:25%" >Team 1</td>
+                                                <td class="align-middle" style="width:25%" >Team 2</td>
                                             </thead>
                                             <tbody class="text-center align-middle">
                                                 {% for dd in both %}
                                                 <tr>
                                                     <td class="align-middle">{{dd[0]}}</td>
+                                                    <td class="align-middle">{{dd[1]}}</td>
                                                     <td class="align-middle">{{dd[2]}}</td>
                                                 </tr>
                                                 {% endfor %}

@@ -449,7 +449,14 @@ def compare(team1, team2):
 
     dft = df.loc[(df['compare'] == "both"), :]
     both = pd.pivot_table(dft, index='rollup_player', columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
-    both = both.sort_values("team1", ascending=False)
+    
+    try: 
+        both['team1'] = both['team1'].astype(int)
+        both = both.sort_values("team1", ascending=False)
+        both['team2'] = both['team2'].astype(int)
+        both = both.sort_values("team2", ascending=False)
+    except: 
+        pass
     both = both.to_records(index=False)
     both = list(both)
 
@@ -457,6 +464,7 @@ def compare(team1, team2):
     dft = df.loc[(df['compare'].isin(['team 1 only (other bench)', 'team 1 only'])), :]
     diff_1 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
     diff_1 = diff_1.sort_values('team1',ascending=False)
+    diff_1['team1'] = diff_1['team1'].astype(int)
     diff_1 = diff_1.to_records(index=False)
     diff_1 = list(diff_1)
 
@@ -464,7 +472,10 @@ def compare(team1, team2):
     #dft = df.loc[(df['compare'].isin(['team 2 only'])), :]
     diff_2 = pd.pivot_table(dft, index=['rollup_player', 'rollup_match'], columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
     diff_2 = diff_2.sort_values('team2',ascending=False)
+    diff_2['team2'] = diff_2['team2'].astype(int)
+    diff_2 = diff_2.drop(columns=['team1'])
     diff_2 = diff_2.to_records(index=False)
+    
     diff_2 = list(diff_2)
 
     score_1 = get_score(team1)
