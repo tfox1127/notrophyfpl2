@@ -449,7 +449,6 @@ def compare(team1, team2):
 
     dft = df.loc[(df['compare'] == "both"), :]
     both = pd.pivot_table(dft, index='rollup_player', columns='player_name_2', values='score_3', aggfunc='sum').reset_index()
-    both.to_clipboard()
     both = both.sort_values("team1", ascending=False)
     both = both.to_records(index=False)
     both = list(both)
