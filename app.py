@@ -74,7 +74,9 @@ def fpl_live():
             vc.web_name as Vice,
             change_str,
             CAST(expected_games AS int), 
-            ROUND(CAST(salary_possible AS numeric), 1) as salary_possible
+            ROUND(CAST(salary_possible AS numeric), 1) as salary_possible,
+            CAST(cap_score.score as numeric) as cap_score,
+            CAST(vc_score.score as numeric) as vc_score
         FROM calc_score_parts
         LEFT JOIN 
             (SELECT entry, player_name FROM api_standings) as names
@@ -82,10 +84,15 @@ def fpl_live():
         LEFT JOIN 
             (SELECT entry, event, element as cap_player_id, web_name FROM api_picks LEFT JOIN (SELECT id, web_name FROM api_elements) as elements ON element = id WHERE api_picks.is_captain) as cap 
             ON calc_score_parts.entry = cap.entry
-
         LEFT JOIN 
             (SELECT entry, event, element as vc_player_id, web_name FROM api_picks LEFT JOIN (SELECT id, web_name FROM api_elements) as elements ON element = id WHERE api_picks.is_vice_captain) as vc
             ON calc_score_parts.entry = vc.entry
+        LEFT JOIN
+            (SELECT element_id, score FROM epl_live_score_gwl) AS cap_score   
+            ON cap.cap_player_id = cap_score.element_id
+        LEFT JOIN 
+            (SELECT element_id, score FROM epl_live_score_gwl) AS vc_score
+            ON vc.vc_player_id = vc_score.element_id
 
         ORDER BY rank_live
 
@@ -275,8 +282,6 @@ def get_score(team):
     df = pd.DataFrame(d.fetchall(), columns=d.keys())
     
     return df.score_3.item()
-
-
 
 @app.route('/compare/<int:team1>/<int:team2>')
 def compare(team1, team2): 
