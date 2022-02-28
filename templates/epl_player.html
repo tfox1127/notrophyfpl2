@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}FPL - League Updates{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2">
+    
+    <h3>{{name}} ({{team}})</h3>
+    <h6>YTD Points: {{ytd_points}} | Current Price: {{price_current}} | Form: {{form}} </h6>
+    
+    <h4>Owned By</h4>
+    <div class="table-responsive text-nowrap">
+      <table class="table table-sm text-xsmall table-hover sortable ;" >
+        <thead class="thead-light text-center">
+          <td class="align-middle">Lg Rank</td>
+          <td class="align-middle">Name</td>
+          <td class="align-middle">Points</td>
+          <td class="align-middle">Status</td>
+        </thead>
+        <tbody class="text-center align-middle">
+          {% for owner in owners %}
+          <tr>
+            <td class="align-middle">{{owner[4]}}</td>
+            <td class="align-middle"><a href="/teams30/{{owner[6]}}" class="text-dark">{{owner[2]}}</a></td>
+            <td class="align-middle">{{owner[3]}}</td>
+            <td class="align-middle">{{owner[5]}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <h4>Previous Fixtures</h4>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-sm text-xsmall table-hover sortable ;">
+            <thead class="thead-light text-center">
+                <td class="align-middle">Round</td>
+                <td class="align-middle">Score</td>
+                <td class="align-middle">Date</td>
+                <td class="align-middle">Opp</td>
+                <td class="align-middle">Mins</td>
+                <td class="align-middle">G</td>
+                <td class="align-middle">A</td>
+                <td class="align-middle">CS</td>
+                <td class="align-middle">GC</td>
+                <td class="align-middle">OG</td>
+                <td class="align-middle">PS</td>
+                <td class="align-middle">PM</td>
+                <td class="align-middle">YC</td>
+                <td class="align-middle">RC</td>
+                <td class="align-middle">SV</td>
+                <td class="align-middle">Bonus</td>
+                <td class="align-middle">BPS</td>
+                <td class="align-middle">Value</td>
+                <td class="align-middle">Transfer (Net)</td>
+                <td class="align-middle">Selected By</td>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for player in players %}
+                <tr>
+                    <td class="align-middle">{{player[2]}}</td>
+                    <td class="align-middle">{{player[3]}}</td>
+                    <td class="align-middle">{{player[4]}}</td>
+                    <td class="align-middle">{{player[5]}} ({{player[6]}}) {{player[7]}}-{{player[8]}}</td>
+                    <td class="align-middle">{{player[9]}}</td>
+                    <td class="align-middle">{{player[10]}}</td>
+                    <td class="align-middle">{{player[11]}}</td>
+                    <td class="align-middle">{{player[12]}}</td>
+                    <td class="align-middle">{{player[13]}}</td>
+                    <td class="align-middle">{{player[14]}}</td>
+                    <td class="align-middle">{{player[15]}}</td>
+                    <td class="align-middle">{{player[16]}}</td>
+                    <td class="align-middle">{{player[17]}}</td>
+                    <td class="align-middle">{{player[18]}}</td>
+                    <td class="align-middle">{{player[19]}}</td>
+                    <td class="align-middle">{{player[20]}}</td>
+                    <td class="align-middle">{{player[21]}}</td>
+                    <td class="align-middle">{{player[22]}}</td>
+                    <td class="align-middle">{{player[23]}}</td>
+                    <td class="align-middle">{{player[24]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+{% endblock %}

@@ -1,4 +1,5 @@
 import os, sys
+from telnetlib import STATUS
 from webbrowser import get
 import pandas as pd
 import datetime as dt
@@ -210,6 +211,45 @@ def fpl_team(fpl_team_id):
     stats = list(stats)
 
     return render_template('fpl_team.html', heading=heading, stats=stats)
+
+@app.route('/player/<int:epl_player_id>/')
+def epl_player(epl_player_id):
+    #MAKE mapper_teams
+    q = f""" SELECT id, short_name
+            FROM api_teams"""
+    d = db.execute(q)
+    db.commit()
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    mapper_teams = dict(zip(df.id, df.short_name))
+    
+    q = f""" SELECT id, first_name, second_name, team, ict_index_rank, total_points, now_cost, form
+            FROM api_elements
+            WHERE id = {epl_player_id}"""
+
+    d = db.execute(q)
+    db.commit()
+    
+    df = pd.DataFrame(d.fetchall(), columns=d.keys())
+    
+    df['team'] = df['team'].map(mapper_teams)
+    df['now_cost'] = df['now_cost'] / 10
+
+    name = df['first_name'].iloc[0] + " " + df['second_name'].iloc[0]
+    team = df['team'].iloc[0]
+    ytd_points = df['total_points'].iloc[0]
+    price_current = df['now_cost'].iloc[0]
+    form = df['form'].iloc[0]
+
+    players    = db.execute("SELECT * FROM api_element_history WHERE element = :epl_player_id", {"epl_player_id": epl_player_id})
+    db.commit()
+
+    owners     = db.execute("SELECT * FROM owners WHERE element = :player_id", {"player_id": epl_player_id})
+    db.commit()
+    
+    return render_template("epl_player.html", name=name, team=team, ytd_points=ytd_points, price_current=price_current, form=form, players=players, owners=owners)
+  
+    #owned_by = current_rank, name, status
+
 
 def make_roster(df, team): 
     df1_roster = df.loc[df['entry'] == team, 'element'].drop_duplicates().to_list()
